@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Poker v1.1</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="https://ei.phncdn.com/www-static/favicon.ico">
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Top section -->
+        <div class="top">
+            <!-- Sidebar izquierda -->
+            <div class="sidebar">
+                <span class="badge">OR F3BET 4BET</span>
+                <div class="set" id="early">
+                    <span class="badge" style="background-color: lightskyblue;">EARLY</span>
+                    <button data-chart="1_left/1_early/vs_mp">vs MP</button>
+                    <button data-chart="1_left/1_early/vs_co">vs CO</button>
+                    <button data-chart="1_left/1_early/vs_btn">vs BTN</button>
+                    <button data-chart="1_left/1_early/vs_sb">vs SB</button>
+                    <button data-chart="1_left/1_early/vs_bb">vs BB</button>
+                </div>
+                <div class="set" id="middle">
+                    <span class="badge" style="background-color: lightskyblue;">MIDDLE</span>
+                    <button data-chart="1_left/2_mp/vs_co">vs CO</button>
+                    <button data-chart="1_left/2_mp/vs_btn">vs BTN</button>
+                    <button data-chart="1_left/2_mp/vs_sb">vs SB</button>
+                    <button data-chart="1_left/2_mp/vs_bb">vs BB</button>
+                </div>
+                <div class="set" id="cutoff">
+                    <span class="badge" style="background-color: lightskyblue;">CUTOFF</span>
+                    <button data-chart="1_left/3_co/vs_btn">vs BTN</button>
+                    <button data-chart="1_left/3_co/vs_sb">vs SB</button>
+                    <button data-chart="1_left/3_co/vs_bb">vs BB</button>
+                </div>
+                <div class="set" id="button">
+                    <span class="badge" style="background-color: lightskyblue;">BUTTON</span>
+                    <button data-chart="1_left/4_btn/vs_sb">vs SB</button>
+                    <button data-chart="1_left/4_btn/vs_bb">vs BB</button>
+                </div>
+                <div class="set" id="small-blind">
+                    <span class="badge" style="background-color: lightskyblue;">SMALL BLIND</span>
+                    <button data-chart="1_left/5_sb/vs_bb">vs BB</button>
+                </div>
+            </div>
+
+            <!-- Imagen central -->
+            <figure class="image-container" id="visor">
+                <img src="img/una-no-es-ninguna.webp" alt="Rango preflop" />
+            </figure>
+
+            <!-- Sidebar derecha -->
+            <div class="right-sidebar">
+                <div class="set" id="bb-game">
+                    <div class="badge">BB GAME</div>
+                    <button data-chart="2_right/1_bb_game/vs_ep">vs EP</button>
+                    <button data-chart="2_right/1_bb_game/vs_mp">vs MP</button>
+                    <button data-chart="2_right/1_bb_game/vs_co">vs CO</button>
+                    <button data-chart="2_right/1_bb_game/vs_btn">vs BTN</button>
+                    <button data-chart="2_right/1_bb_game/vs_sb">vs SB</button>
+                </div>
+
+                <div class="set" id="sqz">
+                    <div class="badge">SQZ</div>
+                    <button data-chart="2_right/2_sqz/btn">BTN</button>
+                    <button data-chart="2_right/2_sqz/sb">SB</button>
+                    <button data-chart="2_right/2_sqz/bb">BB</button>
+                </div>
+
+                <div class="set" id="otros">
+                    <div class="badge">OTROS</div>
+                    <button data-chart="2_right/3_otros/bets">BETS</button>
+                    <button data-chart="2_right/3_otros/stats">STATS</button>
+                </div>
+
+                <div class="set" id="premisas">
+                    <div class="badge">PREMISAS</div>
+                    <button data-chart="2_right/4_premisas/pre">PREFLOP</button>
+                    <button data-chart="2_right/4_premisas/post">POSTFLOP</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom section -->
+        <div class="bottom">
+            <div class="set" id="3bet-f4b-5bet">
+                <span class="badge">3BET - F4B - 5BET</span>
+                <div class="tags">
+                    <button data-chart="3_down/1_3b_4b_5b/mp_vs_ep">MP vs EP</button>
+                    <button data-chart="3_down/1_3b_4b_5b/co_vs_ep">CO vs EP</button>
+                    <button data-chart="3_down/1_3b_4b_5b/co_vs_mp">CO vs MP</button>
+                    <button data-chart="3_down/1_3b_4b_5b/btn_vs_ep">BTN vs EP</button>
+                    <button data-chart="3_down/1_3b_4b_5b/btn_vs_mp">BTN vs MP</button>
+                    <button data-chart="3_down/1_3b_4b_5b/btn_vs_co">BTN vs CO</button>
+                    <button data-chart="3_down/1_3b_4b_5b/sb_vs_ep">SB vs EP</button>
+                    <button data-chart="3_down/1_3b_4b_5b/sb_vs_mp">SB vs MP</button>
+                    <button data-chart="3_down/1_3b_4b_5b/sb_vs_co">SB vs CO</button>
+                    <button data-chart="3_down/1_3b_4b_5b/sb_vs_bt">SB vs BT</button>
+                </div>
+            </div>
+            <div class="box">
+                <div class="set" id="rol">
+                    <span class="badge">ROL</span>
+                    <div>
+                        <button data-chart="3_down/2_rol/mp">MP</button>
+                        <button data-chart="3_down/2_rol/co">CO</button>
+                        <button data-chart="3_down/2_rol/btn">BTN</button>
+                        <button data-chart="3_down/2_rol/sb">SB</button>
+                    </div>
+                </div>
+                <div class="set" id="cold-4bet">
+                    <span class="badge">COLD 4BET</span>
+                    <div>
+                        <button data-chart="3_down/3_cold_4b/ip">IP</button>
+                        <button data-chart="3_down/3_cold_4b/opp">OPP</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Páginas de texto (antes imágenes) -->
+    <template data-chart="2_right/3_otros/bets">
+        <div class="texto">
+            <div class="sizings">
+                <section>
+                    <h3>3BET IP</h3>
+                    <table>
+                        <tr><td>2/2,2/2,25</td><td>7 BB</td></tr>
+                        <tr><td>2,3/2,5</td><td>7,5 BB</td></tr>
+                        <tr><td>2,7/2,8</td><td>8,5 BB</td></tr>
+                        <tr><td>3</td><td>9 BB</td></tr>
+                    </table>
+                </section>
+                <section>
+                    <h3>3BET OOP</h3>
+                    <table>
+                        <tr><td>2/2,2/2,25</td><td>10 BB</td></tr>
+                        <tr><td>2,5</td><td>12 BB</td></tr>
+                        <tr><td>3</td><td>12 BB</td></tr>
+                        <tr><td>3,5</td><td>13 BB</td></tr>
+                    </table>
+                </section>
+                <section>
+                    <h3>3BET IP BB VS SB</h3>
+                    <table>
+                        <tr><td>2/2,2/2,25</td><td>9 BB</td></tr>
+                        <tr><td>2,5/3</td><td>10 BB</td></tr>
+                        <tr><td>3,5</td><td>12 BB</td></tr>
+                    </table>
+                </section>
+                <section>
+                    <h3>4BET Y C4</h3>
+                    <table>
+                        <tr><td>6</td><td>17 BB</td></tr>
+                        <tr><td>7</td><td>19 BB</td></tr>
+                        <tr><td>8</td><td>20 BB</td></tr>
+                        <tr><td>9</td><td>22 BB</td></tr>
+                        <tr><td>10</td><td>23 BB</td></tr>
+                        <tr><td>11</td><td>25 BB</td></tr>
+                        <tr><td>12</td><td>26 BB</td></tr>
+                        <tr><td>13</td><td>27 BB</td></tr>
+                    </table>
+                </section>
+                <section>
+                    <h3>SQZ IP</h3>
+                    <table>
+                        <tr><td>X</td><td>X4 BB</td></tr>
+                    </table>
+                </section>
+                <section>
+                    <h3>SQZ OOP</h3>
+                    <table>
+                        <tr><td>X</td><td>X5 BB hasta 15 BB</td></tr>
+                    </table>
+                </section>
+            </div>
+        </div>
+    </template>
+
+    <template data-chart="2_right/3_otros/stats">
+        <div class="texto">
+            <table class="perfiles">
+                <tr><th>SUPER REG</th><td>3BET +10</td><td>WWSF +49</td><td><span class="dot" style="background:#e53935"></span>ROJO</td></tr>
+                <tr><th>REG</th><td>3BET +6</td><td>WWSF 47/49</td><td><span class="dot" style="background:#fdd835"></span>AMARILLO</td></tr>
+                <tr><th>NIT</th><td>3BET +6</td><td>WWSF 46-</td><td><span class="dot" style="background:#8e24aa"></span>MORADO</td></tr>
+                <tr><th>SUPER NIT</th><td>3BET -5</td><td>WWSF 46-</td><td><span class="dot" style="background:#1e88e5"></span>AZUL</td></tr>
+            </table>
+            <ul class="hud-claves">
+                <li>VPIP · PFR · 3B/F3B/4B/F4B · RB/WWSF/WSD · HAND</li>
+                <li>PRF EP / SB</li>
+                <li>3BET MPvs / BBvs</li>
+            </ul>
+            <table class="hud">
+                <tr><td colspan="3">23 19 10.4/54/22/64</td><td colspan="4">42/50/46</td><td colspan="3">48K</td></tr>
+                <tr class="sep"><td>EP</td><td>15</td><td>33</td><td>32</td></tr>
+                <tr><td>MP</td><td>19</td><td>38</td><td>43</td></tr>
+                <tr><td>CO</td><td>28</td><td>45</td><td>52</td></tr>
+                <tr><td>BU</td><td>42</td><td>59</td><td></td></tr>
+                <tr><td>SB</td><td>52</td><td></td><td>63</td></tr>
+                <tr class="sep"><td>MP vs</td><td>-</td><td>7</td><td></td><td></td><td></td><td></td><td>7</td><td>44</td><td>9</td></tr>
+                <tr><td>CO vs</td><td>-</td><td>9</td><td>9</td><td></td><td></td><td></td><td>9</td><td>55</td><td>22</td></tr>
+                <tr><td>BU vs</td><td>-</td><td>8</td><td>11</td><td>13</td><td></td><td></td><td>11</td><td>68</td><td></td></tr>
+                <tr><td>SB vs</td><td>-</td><td>7</td><td>10</td><td>11</td><td>14</td><td></td><td>12</td><td>64</td><td></td></tr>
+                <tr><td>BB vs</td><td>-</td><td>5</td><td>6</td><td>8</td><td>10</td><td>23</td><td>11</td><td>69</td><td></td></tr>
+            </table>
+        </div>
+    </template>
+
+    <template data-chart="2_right/4_premisas/pre">
+        <div class="texto">
+            <section class="nota amarilla">
+                <h3>VS REGULARES</h3>
+                <ul>
+                    <li>4bet a +30bb, solo pagamos con AA.</li>
+                    <li>5bet a +40bb, solo pagamos con AA.</li>
+                    <li>Si hacemos Cold 4bet y pushea EP/MP solo pagamos con AA y KK.</li>
+                    <li>Si nos hacen Cold 4bet y estamos en EP/MP solo pagamos con AA y KK.</li>
+                </ul>
+            </section>
+            <section class="nota verde">
+                <h3>VS RECREACIONALES</h3>
+                <ul>
+                    <li>Si hace L/R, SQZ, 4BET tiene mano fuerte.</li>
+                    <li>Short stack; si limpea roleamos a 33% de su stack con 99+, AJs+, AQo+ y vamos allin en cualquier flop.</li>
+                    <li>Deep stack; si limpea roleamos a 33% de su stack con QQ+, AK y vamos allin en cualquier flop.</li>
+                    <li>No jugar flips preflop para no regalar 50% de equity.</li>
+                </ul>
+            </section>
+        </div>
+    </template>
+
+    <template data-chart="2_right/4_premisas/post">
+        <div class="texto">
+            <section class="nota azul">
+                <h3>¡¡¡RAISE O X/R EN TURN ES MUERTE<br>SOLO PAGAMOS CON DOBLES+!!!</h3>
+                <ul>
+                    <li>Si hacen X/R flop, bet turn y push river, solo pagamos dobles+.</li>
+                    <li>Si nos hacen Farha partimos de check en flop.</li>
+                    <li>Raise o check/raise en river es muerte, solo pagamos con set+ si no hay carta doblada o color.</li>
+                    <li>Donk en river es puro valor.</li>
+                    <li>Si nos apuestan las 3 calles, es puro valor.</li>
+                    <li>En board doblado no nos stackeamos ni con colores.</li>
+                    <li>Si hacen check/raise en 3bet pot/4bet pot, solo pagamos doble+.</li>
+                </ul>
+                <h3>¡¡¡MI ENFOQUE NO ES GANAR DINERO<br>SINO TOMAR BUENAS DECISIONES!!!</h3>
+            </section>
+        </div>
+    </template>
+
+    <script src="ranges.js"></script>
+    <script>
+        const RANKS = 'AKQJT98765432';
+        const visor = document.getElementById('visor');
+
+        function nombreMano(fila, col) {
+            if (fila === col) return RANKS[fila] + RANKS[col];
+            return fila < col ? RANKS[fila] + RANKS[col] + 's' : RANKS[col] + RANKS[fila] + 'o';
+        }
+
+        // "y50b50" -> [['y', 50], ['b', 50]]; "r" -> [['r', 100]]; "." -> []
+        function parsearCelda(txt) {
+            return [...txt.matchAll(/([rygb])(\d*)/g)].map(([, c, p]) => [c, p ? +p : 100]);
+        }
+
+        function leyendaDe(clave) {
+            const grupo = Object.keys(LEYENDAS).find(g => clave.startsWith(g));
+            return LEYENDAS[grupo] || [];
+        }
+
+        function dibujarRango(clave) {
+            const leyenda = leyendaDe(clave);
+            const nombres = Object.fromEntries(leyenda);
+            const grilla = document.createElement('div');
+            grilla.className = 'grilla';
+
+            RANGOS[clave].forEach((linea, fila) => {
+                linea.split(' ').forEach((txt, col) => {
+                    const celda = document.createElement('div');
+                    const mano = nombreMano(fila, col);
+                    const partes = parsearCelda(txt);
+                    celda.className = 'celda';
+                    celda.textContent = mano;
+
+                    if (partes.length) {
+                        let x = 0;
+                        const stops = partes.map(([c, p]) => `var(--c-${c}) ${x}% ${(x += p)}%`);
+                        if (x < 100) stops.push(`var(--c-vacia) ${x}%`);
+                        celda.style.backgroundImage = `linear-gradient(to right, ${stops.join(', ')})`;
+                        celda.classList.add('jugada');
+                        celda.title = mano + ': ' + partes.map(([c, p]) => `${nombres[c] || ''} ${p}%`.trim()).join(' · ');
+                    }
+                    grilla.appendChild(celda);
+                });
+            });
+
+            const pie = document.createElement('figcaption');
+            pie.className = 'leyenda';
+            leyenda.forEach(([c, texto]) => {
+                const item = document.createElement('span');
+                item.innerHTML = `<i style="background: var(--c-${c})"></i>${texto}`;
+                pie.appendChild(item);
+            });
+
+            visor.replaceChildren(grilla);
+            if (leyenda.length) visor.appendChild(pie);
+        }
+
+        function mostrar(clave) {
+            const plantilla = document.querySelector(`template[data-chart="${clave}"]`);
+            if (plantilla) visor.replaceChildren(plantilla.content.cloneNode(true));
+            else dibujarRango(clave);
+
+            // En celular la grilla queda fija arriba (sticky); las páginas de texto no,
+            // así que se lleva la vista a su inicio.
+            visor.classList.toggle('es-grilla', !plantilla);
+            if (plantilla && matchMedia('(max-width: 600px)').matches) {
+                visor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        document.querySelectorAll('button[data-chart]').forEach(boton => {
+            boton.addEventListener('click', () => {
+                document.querySelector('button.activo')?.classList.remove('activo');
+                boton.classList.add('activo');
+                mostrar(boton.dataset.chart);
+            });
+        });
+    </script>
+</body>
+
+</html>
