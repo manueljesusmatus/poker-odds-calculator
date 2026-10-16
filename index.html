@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Poker v1.1</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="icon" type="image/png" href="https://ei.phncdn.com/www-static/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><g transform='rotate(-15 16 30)'><rect x='8.5' y='4' width='15' height='21' rx='2' fill='white' stroke='%23222' stroke-width='1.3'/><path transform='translate(16 14.5) scale(.55)' d='M0 -10C4 -5 10 -2 10 2C10 6 6 7 2.5 4.5C2.5 7 3.5 9 5 10L-5 10C-3.5 9 -2.5 7 -2.5 4.5C-6 7 -10 6 -10 2C-10 -2 -4 -5 0 -10Z' fill='%23111'/></g><g transform='rotate(15 16 30)'><rect x='8.5' y='4' width='15' height='21' rx='2' fill='white' stroke='%23222' stroke-width='1.3'/><path transform='translate(16 15) scale(.55)' d='M0 6C-10 -2 -10 -10 -5 -10C-2 -10 0 -7 0 -5C0 -7 2 -10 5 -10C10 -10 10 -2 0 6Z' fill='%23d0021b'/></g></svg>">
 </head>
 
 <body>
@@ -50,8 +50,36 @@
             </div>
 
             <!-- Imagen central -->
-            <figure class="image-container" id="visor">
-                <img src="img/una-no-es-ninguna.webp" alt="Rango preflop" />
+            <figure class="image-container fijo" id="visor">
+                <svg class="portada" viewBox="0 0 200 200" role="img" aria-label="Cartas de póker">
+                    <defs>
+                        <path id="pica" d="M0 -10C4 -5 10 -2 10 2C10 6 6 7 2.5 4.5C2.5 7 3.5 9 5 10L-5 10C-3.5 9 -2.5 7 -2.5 4.5C-6 7 -10 6 -10 2C-10 -2 -4 -5 0 -10Z" />
+                        <path id="corazon" d="M0 6C-10 -2 -10 -10 -5 -10C-2 -10 0 -7 0 -5C0 -7 2 -10 5 -10C10 -10 10 -2 0 6Z" />
+                        <radialGradient id="pano" cx="50%" cy="45%" r="65%">
+                            <stop offset="0" stop-color="#2e8b57" />
+                            <stop offset="1" stop-color="#14532d" />
+                        </radialGradient>
+                    </defs>
+                    <rect width="200" height="200" rx="6" fill="url(#pano)" />
+                    <g font-family="Arial, sans-serif">
+                    <g transform="translate(-16 4) rotate(-15 100 175)">
+                        <rect x="66" y="45" width="68" height="96" rx="7" fill="#fff" stroke="#c9c9c9" />
+                        <text x="73" y="64" font-size="17" font-weight="700" fill="#111">A</text>
+                        <use href="#pica" transform="translate(78.5 75) scale(.55)" fill="#111" />
+                        <text x="127" y="122" font-size="17" font-weight="700" fill="#111" transform="rotate(180 122 116)">A</text>
+                        <use href="#pica" transform="translate(121.5 111) rotate(180) scale(.55)" fill="#111" />
+                        <use href="#pica" transform="translate(100 93) scale(1.7)" fill="#111" />
+                    </g>
+                    <g transform="translate(16 4) rotate(15 100 175)">
+                        <rect x="66" y="45" width="68" height="96" rx="7" fill="#fff" stroke="#c9c9c9" />
+                        <text x="73" y="64" font-size="17" font-weight="700" fill="#d0021b">A</text>
+                        <use href="#corazon" transform="translate(78.5 75) scale(.55)" fill="#d0021b" />
+                        <text x="127" y="122" font-size="17" font-weight="700" fill="#d0021b" transform="rotate(180 122 116)">A</text>
+                        <use href="#corazon" transform="translate(121.5 111) rotate(180) scale(.55)" fill="#d0021b" />
+                        <use href="#corazon" transform="translate(100 93) scale(1.7)" fill="#d0021b" />
+                    </g>
+                    </g>
+                </svg>
             </figure>
 
             <!-- Sidebar derecha -->
@@ -319,13 +347,6 @@
             const plantilla = document.querySelector(`template[data-chart="${clave}"]`);
             if (plantilla) visor.replaceChildren(plantilla.content.cloneNode(true));
             else dibujarRango(clave);
-
-            // En celular la grilla queda fija arriba (sticky); las páginas de texto no,
-            // así que se lleva la vista a su inicio.
-            visor.classList.toggle('es-grilla', !plantilla);
-            if (plantilla && matchMedia('(max-width: 600px)').matches) {
-                visor.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
         }
 
         document.querySelectorAll('button[data-chart]').forEach(boton => {

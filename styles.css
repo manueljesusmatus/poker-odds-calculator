@@ -83,10 +83,10 @@ button:hover {
     align-self: flex-start;
 }
 
-.image-container img {
+.portada {
+    display: block;
     width: 100%;
     height: auto;
-    margin: auto;
 }
 
 button.activo {
@@ -354,7 +354,7 @@ button.activo {
         padding: 6px;
     }
 
-    .image-container.es-grilla {
+    .image-container.fijo {
         position: sticky;
         top: 0;
         z-index: 5;
