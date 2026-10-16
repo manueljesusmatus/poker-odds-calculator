@@ -159,45 +159,65 @@ button.activo {
     border-radius: 2px;
 }
 
-/* Páginas de texto */
+/* Páginas de texto: mismo cuadrado que la grilla de rangos.
+   Las medidas en cqi escalan con el ancho del visor para que todo entre sin scroll. */
+.image-container {
+    container-type: inline-size;
+}
+
 .texto {
+    aspect-ratio: 1;
     width: 100%;
-    font-size: 13px;
+    box-sizing: border-box;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5cqi;
+    font-size: 3.4cqi;
+    line-height: 1.3;
     color: #222;
 }
 
 .texto h3 {
-    margin: 0 0 6px;
-    font-size: 14px;
+    margin: 0 0 1.5cqi;
+    font-size: 3.8cqi;
     text-align: center;
 }
 
 .texto ul {
     margin: 0;
-    padding-left: 18px;
+    padding-left: 4.5cqi;
 }
 
 .texto li {
-    margin-bottom: 4px;
+    margin-bottom: 1cqi;
 }
 
 .nota {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     border: 1px solid #999;
     border-radius: 4px;
-    padding: 10px 12px;
-    margin-bottom: 10px;
+    padding: 2.5cqi 3.5cqi;
 }
 
-.nota:last-child { margin-bottom: 0; }
 .nota.amarilla { background: #fbe3a4; }
 .nota.verde { background: #c6e3a6; }
-.nota.azul { background: #bcd8f2; }
-.nota.azul h3 { margin: 6px 0 10px; }
+.nota.azul { background: #bcd8f2; justify-content: space-evenly; }
 
 .sizings {
+    flex: 1;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-    gap: 12px;
+    grid-template-columns: 1fr 1fr;
+    gap: 4cqi;
+}
+
+.sizings .columna {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .sizings table,
@@ -210,51 +230,57 @@ button.activo {
 .sizings table { table-layout: fixed; }
 
 .sizings td {
-    padding: 4px 8px;
+    padding: 0.9cqi 1cqi;
     border: 1px solid #fff;
     background: #8de08a;
     text-align: center;
     font-weight: 600;
+    white-space: nowrap;
 }
 
 .sizings td + td {
     background: #1f3b4d;
     color: #fff;
+    white-space: normal;
 }
 
 .perfiles th,
 .perfiles td {
-    padding: 3px 6px;
+    padding: 0.4cqi 1cqi;
     text-align: left;
     white-space: nowrap;
 }
 
 .dot {
     display: inline-block;
-    width: 10px;
-    height: 10px;
+    width: 2.6cqi;
+    height: 2.6cqi;
     border-radius: 50%;
-    margin-right: 5px;
+    margin-right: 1.2cqi;
 }
 
 .hud-claves {
-    margin: 8px 0 !important;
     font-weight: 600;
 }
 
+.hud-claves li {
+    margin-bottom: 0;
+}
+
 .hud {
+    flex: 1;
     background: #2b2b2b;
     color: #eee;
     font-family: Georgia, 'Times New Roman', serif;
 }
 
 .hud td {
-    padding: 2px 6px;
+    padding: 0 1.2cqi;
     white-space: nowrap;
 }
 
 .hud tr.sep td {
-    padding-top: 12px;
+    padding-top: 2.5cqi;
 }
 
 .right-sidebar {
@@ -403,26 +429,6 @@ button.activo {
         padding: 4px 8px;
         font-size: 13px;
         border-radius: 6px;
-    }
-
-    /* Páginas de texto */
-    .texto {
-        font-size: 14px;
-        overflow-x: auto;
-    }
-
-    .perfiles th,
-    .perfiles td {
-        padding: 3px 4px;
-        font-size: 12px;
-    }
-
-    .hud {
-        font-size: 13px;
-    }
-
-    .hud td {
-        padding: 2px 4px;
     }
 }
 
