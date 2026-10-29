@@ -7,7 +7,7 @@ const NOTAS = {
     CO: 'Cutoff · rango significativamente más amplio',
     BTN: 'Button · posición más ventajosa · rango muy amplio',
     SB: 'Small blind · posición forzada · OOP postflop',
-    BB: 'Big blind · no puede abrir · el tab muestra rango de defensa vs RFI',
+    BB: 'Big blind · no puede abrir · defensa vs RFI',
 };
 
 // Letra de RANGOS -> clase CSS, texto de la leyenda, acción en "Info de mano" y descripción.
@@ -21,41 +21,38 @@ const ACCIONES = {
     '.': { clase: 'fold', leyenda: 'Fold', accion: 'Fold', desc: 'Fold siempre' },
 };
 
+// Cada vista es un bloque del menú; el orden de las claves es el orden en pantalla.
 const VISTAS = {
     rfi: {
-        boton: () => 'Apertura RFI',
+        menu: 'Apertura RFI',
+        tono: 'verde',
         titulo: pos => `Rango de apertura — ${pos}`,
         leyenda: 'go.',
         mixto: { leyenda: 'Mixto (Raise o Fold)', desc: 'Mixto: raise o fold' },
     },
     vsRfi: {
-        boton: pos => pos === 'BB' ? 'Defensa vs RFI' : 'VS RFI',
-        titulo: (pos, riv) => pos === 'BB' ? `BB defendiendo vs ${riv}` : `Respuesta vs apertura — ${pos}`,
-        sub: 'Abridor',
+        menu: 'VS RFI',
+        ayuda: 'Tu posición · vs abridor',
+        tono: 'azul',
+        titulo: (pos, riv) => pos === 'BB' ? `BB defendiendo vs ${riv}` : `${pos} vs apertura de ${riv}`,
         leyenda: 'rbo.',
     },
     vs3bet: {
-        boton: () => 'VS 3-BET',
+        menu: 'VS 3-BET',
+        ayuda: 'Abriste · vs 3-bettor',
+        tono: 'rojo',
         titulo: (pos, riv) => `${pos} vs 3-bet de ${riv}`,
-        sub: '3-Bettor',
         leyenda: 'bopx.',
     },
 };
 
 const $ = id => document.getElementById(id);
 const estado = { pos: 'UTG', vista: 'rfi', rival: null };
-
-function vistasDe(pos) {
-    return Object.keys(VISTAS).filter(v => RANGOS[v][pos]);
-}
-
-function rivalesDe(pos, vista) {
-    return vista === 'rfi' ? [] : Object.keys(RANGOS[vista][pos]);
-}
+let resumenTabla = '';
 
 function tablaActual() {
     const { pos, vista, rival } = estado;
-    return vista === 'rfi' ? RANGOS.rfi[pos] : RANGOS[vista][pos][rival];
+    return vista === 'rfi' ? RANGOS.rfi[pos] : RANGOS[vista][pos]?.[rival];
 }
 
 function accion(letra) {
@@ -69,63 +66,90 @@ function mano(fila, col) {
     return { nombre: RANKS[col] + RANKS[fila] + 'o', tipo: 'Offsuit', combos: 12 };
 }
 
-function botones(contenedor, items, activo, alElegir) {
-    contenedor.replaceChildren(...items.map(([valor, texto]) => {
-        const b = document.createElement('button');
-        b.type = 'button';
-        b.textContent = texto;
-        b.classList.toggle('activo', valor === activo);
-        b.addEventListener('click', () => alElegir(valor));
-        return b;
-    }));
+function boton(texto, pos, vista, rival) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = texto;
+    Object.assign(b.dataset, { pos, vista, rival: rival || '' });
+    return b;
+}
+
+// Menú con todas las tablas: Apertura (una por posición) y una fila por posición en VS RFI / VS 3-BET.
+function construirMenu() {
+    const menu = $('menu');
+    for (const [vista, conf] of Object.entries(VISTAS)) {
+        const grupo = document.createElement('section');
+        grupo.className = 'grupo';
+        grupo.dataset.tono = conf.tono;
+        grupo.innerHTML = `<h2 class="etiqueta">${conf.menu}</h2>` + (conf.ayuda ? `<p class="grupo-ayuda">${conf.ayuda}</p>` : '');
+
+        if (vista === 'rfi') {
+            const fila = document.createElement('div');
+            fila.className = 'botones apertura';
+            fila.append(...Object.keys(RANGOS.rfi).map(pos => boton(pos, pos, vista)));
+            grupo.appendChild(fila);
+        } else {
+            for (const [pos, rivales] of Object.entries(RANGOS[vista])) {
+                const fila = document.createElement('div');
+                fila.className = 'fila';
+                fila.dataset.pos = pos;
+                const botones = document.createElement('div');
+                botones.className = 'botones';
+                botones.append(...Object.keys(rivales).map(riv => boton(riv, pos, vista, riv)));
+                fila.innerHTML = `<span class="fila-pos">${pos}</span>`;
+                fila.appendChild(botones);
+                grupo.appendChild(fila);
+            }
+        }
+        menu.appendChild(grupo);
+    }
+
+    menu.addEventListener('click', e => {
+        const b = e.target.closest('button');
+        if (!b) return;
+        Object.assign(estado, { pos: b.dataset.pos, vista: b.dataset.vista, rival: b.dataset.rival || null });
+        actualizar();
+    });
 }
 
 function infoVacia() {
     const tactil = matchMedia('(hover: none)').matches;
     $('info').innerHTML = `<div class="info-raya">—</div><p class="info-hint">${tactil ? 'Tocá una mano' : 'Pasá el mouse'}</p>`;
+    $('resumen').textContent = resumenTabla;
 }
 
 function mostrarInfo(celda) {
     const a = accion(celda.dataset.letra);
+    const { mano, tipo, combos } = celda.dataset;
     $('info').innerHTML = `
-        <div class="info-mano">${celda.dataset.mano}</div>
-        <p class="info-tipo">${celda.dataset.tipo}</p>
+        <div class="info-mano">${mano}</div>
+        <p class="info-tipo">${tipo}</p>
         <p class="info-accion a-${a.clase}">${a.accion}</p>
-        <p class="info-dato">${celda.dataset.combos} combinaciones</p>
+        <p class="info-dato">${combos} combinaciones</p>
         <p class="info-dato">${a.desc}</p>`;
+    $('resumen').innerHTML = `<b>${mano}</b> · ${tipo} · <span class="info-accion a-${a.clase}">${a.accion}</span> · ${combos} combos`;
     $('grilla').querySelector('.marcada')?.classList.remove('marcada');
     celda.classList.add('marcada');
 }
 
 function render() {
-    const { pos, vista } = estado;
+    const { pos, vista, rival } = estado;
     const conf = VISTAS[vista];
 
-    botones($('posiciones'), POSICIONES.map(p => [p, p]), pos, elegirPosicion);
-    botones($('vistas'), vistasDe(pos).map(v => [v, VISTAS[v].boton(pos)]), vista, v => {
-        estado.vista = v;
-        estado.rival = null;
-        actualizar();
+    $('menu').querySelectorAll('button').forEach(b => {
+        const activo = b.dataset.pos === pos && b.dataset.vista === vista && (b.dataset.rival || null) === rival;
+        b.classList.toggle('activo', activo);
+        b.setAttribute('aria-pressed', activo);
     });
 
-    const rivales = rivalesDe(pos, vista);
-    $('subbarra').hidden = !rivales.length;
-    $('subbarra').dataset.tono = vista === 'vs3bet' ? 'rojo' : pos === 'BB' ? 'verde' : 'azul';
-    $('sub-etiqueta').textContent = conf.sub || '';
-    botones($('rivales'), rivales.map(r => [r, 'VS ' + r]), estado.rival, r => {
-        estado.rival = r;
-        actualizar();
-    });
-
-    $('titulo').textContent = conf.titulo(pos, estado.rival);
+    $('titulo').textContent = conf.titulo(pos, rival);
     $('nota').textContent = NOTAS[pos];
 
     // Grilla
-    const tabla = tablaActual();
     const celdas = [];
     let jugados = 0;
     let abiertos = 0;
-    tabla.forEach((linea, fila) => {
+    tablaActual().forEach((linea, fila) => {
         [...linea].forEach((letra, col) => {
             const m = mano(fila, col);
             const c = document.createElement('div');
@@ -148,24 +172,19 @@ function render() {
 
     // Estadísticas: vs 3-bet se mide sobre el rango con el que abriste.
     const total = vista === 'vs3bet' ? abiertos : 1326;
+    const porcentaje = (jugados / total * 100).toFixed(1) + '%';
     $('combos').textContent = jugados;
-    $('porcentaje').textContent = (jugados / total * 100).toFixed(1) + '%';
+    $('porcentaje').textContent = porcentaje;
     $('base').textContent = vista === 'vs3bet' ? 'del rango de apertura' : 'de 1326 combos totales';
+    resumenTabla = `${jugados} combos · ${porcentaje} ${vista === 'vs3bet' ? 'del rango de apertura' : 'de las manos'}`;
 
     infoVacia();
 }
 
-function elegirPosicion(pos) {
-    estado.pos = pos;
-    actualizar();
-}
-
-// Ajusta vista/rival a lo que existe para la posición, guarda el estado en la URL y dibuja.
+// Si el estado no apunta a una tabla existente vuelve a UTG apertura; guarda el estado en la URL y dibuja.
 function actualizar() {
-    const vistas = vistasDe(estado.pos);
-    if (!vistas.includes(estado.vista)) estado.vista = vistas[0];
-    const rivales = rivalesDe(estado.pos, estado.vista);
-    if (!rivales.includes(estado.rival)) estado.rival = rivales[0] || null;
+    if (!VISTAS[estado.vista] || !tablaActual()) Object.assign(estado, { pos: 'UTG', vista: 'rfi', rival: null });
+    if (estado.vista === 'rfi') estado.rival = null;
     history.replaceState(null, '', '#' + [estado.pos, estado.vista, estado.rival].filter(Boolean).join('/'));
     render();
 }
@@ -174,7 +193,8 @@ function leerHash() {
     const [pos, vista, rival] = decodeURIComponent(location.hash.slice(1)).split('/');
     if (POSICIONES.includes(pos)) estado.pos = pos;
     if (VISTAS[vista]) estado.vista = vista;
-    if (rival) estado.rival = rival;
+    // Sin rival en el hash, el primero disponible
+    estado.rival = rival || (estado.vista !== 'rfi' && Object.keys(RANGOS[estado.vista][estado.pos] || {})[0]) || null;
 }
 
 // Info de mano: hover con mouse, toque en pantallas táctiles.
@@ -210,5 +230,6 @@ window.addEventListener('hashchange', () => {
     actualizar();
 });
 
+construirMenu();
 leerHash();
 actualizar();

@@ -55,33 +55,6 @@ body {
     gap: 14px;
 }
 
-/* Cabecera */
-.cabecera {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
-}
-
-.logo {
-    margin: 0;
-    font-size: 30px;
-    font-weight: 700;
-    line-height: 1;
-    color: var(--oro);
-    letter-spacing: 0.01em;
-}
-
-.logo span { color: var(--abrir); }
-
-.sub {
-    margin: 6px 0 0;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    color: var(--apagado);
-}
-
 /* Botones */
 button {
     font: inherit;
@@ -102,33 +75,82 @@ button {
 
 button:hover { color: var(--texto); border-color: #2a4256; }
 
-.contraste { padding: 0 16px; margin-top: 2px; }
+.contraste {
+    height: 26px;
+    padding: 0 9px;
+    font-size: 14px;
+    letter-spacing: 0;
+}
 .contraste.activo { color: var(--oro); border-color: var(--oro-borde); }
 
-/* Barras de selección */
-.barra {
+/* Menú: todas las tablas a la vista. Columnas: apertura | vs RFI | vs 3-bet */
+.menu {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
+    gap: 12px;
+}
+
+.grupo {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px 14px;
-    padding: 14px 20px;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px 16px;
     background: var(--panel);
     border: 1px solid var(--borde);
     border-radius: 10px;
 }
 
-.barra[hidden] { display: none; }
+/* El tono del bloque marca el botón activo (verde apertura, azul vs RFI, rojo vs 3-bet) */
+.grupo[data-tono="verde"] { --tono: var(--abrir); --tono-f: var(--abrir-f); }
+.grupo[data-tono="azul"] { --tono: var(--call); --tono-f: var(--call-f); }
+.grupo[data-tono="rojo"] { --tono: var(--tres); --tono-f: var(--tres-f); }
+
+.grupo > .etiqueta { color: var(--tono); }
+
+.grupo-ayuda {
+    margin: -4px 0 2px;
+    font-size: 12px;
+    color: var(--apagado);
+}
+
+.grupo > .etiqueta + .botones { margin-top: 2px; }
 
 .botones {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 5px;
 }
 
-.separador {
-    align-self: stretch;
-    width: 1px;
-    background: var(--borde);
+.apertura { flex-direction: column; }
+
+.fila {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.fila-pos {
+    flex: 0 0 34px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--etiqueta);
+}
+
+.fila:has(.activo) .fila-pos { color: var(--oro); }
+
+.menu button {
+    height: 28px;
+    min-width: 48px;
+    padding: 0 8px;
+    letter-spacing: 0.12em;
+}
+
+.menu button.activo {
+    color: var(--tono);
+    background: var(--tono-f);
+    border-color: var(--tono);
+    font-weight: 700;
 }
 
 .etiqueta {
@@ -138,33 +160,6 @@ button:hover { color: var(--texto); border-color: #2a4256; }
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--etiqueta);
-}
-
-#posiciones button { min-width: 50px; }
-
-#posiciones button.activo {
-    color: var(--oro);
-    background: var(--oro-fondo);
-    border-color: var(--oro-borde);
-}
-
-#vistas button.activo {
-    color: var(--call);
-    background: var(--call-f);
-    border-color: var(--call);
-}
-
-/* Subbarra: el tono depende de la vista (azul vs RFI, verde defensa BB, rojo vs 3-bet) */
-.barra[data-tono="azul"] { --tono: var(--call); --tono-f: var(--call-f); }
-.barra[data-tono="verde"] { --tono: var(--abrir); --tono-f: var(--abrir-f); }
-.barra[data-tono="rojo"] { --tono: var(--tres); --tono-f: var(--tres-f); }
-
-#subbarra .etiqueta { color: var(--tono); }
-#rivales button.activo {
-    color: var(--tono);
-    background: var(--tono-f);
-    border-color: var(--tono);
-    font-weight: 700;
 }
 
 /* Cuerpo: grilla + lateral */
@@ -177,12 +172,14 @@ button:hover { color: var(--texto); border-color: #2a4256; }
 
 .tablero-cab {
     display: flex;
-    justify-content: space-between;
-    align-items: baseline;
+    align-items: center;
     flex-wrap: wrap;
     gap: 4px 12px;
     margin: 6px 0 10px;
 }
+
+/* Título a la izquierda; nota y botón de contraste a la derecha */
+.tablero-cab .etiqueta { margin-right: auto; }
 
 .nota {
     font-size: 13px;
@@ -278,6 +275,8 @@ button:hover { color: var(--texto); border-color: #2a4256; }
     color: var(--etiqueta);
 }
 
+.resumen { display: none; }
+
 .numero {
     font-family: var(--mono);
     font-size: 20px;
@@ -330,6 +329,9 @@ button:hover { color: var(--texto); border-color: #2a4256; }
 @media (max-width: 760px) {
     .app { padding: 16px 16px 24px; gap: 10px; }
 
+    .menu { grid-template-columns: minmax(0, 1fr); }
+    .apertura { flex-direction: row; }
+
     .cuerpo { grid-template-columns: minmax(0, 1fr); }
 
     .lateral {
@@ -341,16 +343,56 @@ button:hover { color: var(--texto); border-color: #2a4256; }
     .lateral .tarjeta:last-child { order: -1; }
 }
 
+/* Celular: la grilla queda fija arriba y los botones pasan por debajo (como en la v1) */
 @media (max-width: 600px) {
-    .logo { font-size: 26px; }
-    .barra { padding: 12px; gap: 8px 10px; }
-    .separador { display: none; }
-    .barra .etiqueta { flex-basis: 100%; }
-    .botones { width: 100%; }
-    .botones button { flex: 1 0 auto; padding: 0 8px; height: 36px; }
-    #posiciones button { min-width: 0; }
+
+    .cuerpo { display: contents; }
+    .tablero { order: 1; }
+    .menu { order: 2; }
+    .lateral { order: 3; }
+
+    .tablero {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        margin: 0 -16px;
+        padding: 6px 16px 8px;
+        background: var(--fondo);
+        border-bottom: 1px solid var(--borde);
+    }
+
+    .tablero-cab { margin: 0 0 6px; }
+    .nota { display: none; }
+
+    .resumen {
+        display: block;
+        margin: 6px 0 0;
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--etiqueta);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .resumen b { color: var(--oro); font-weight: 500; }
+    .resumen .info-accion { font-size: 12px; }
+
+    .grupo { padding: 12px; }
+    /* 5 columnas fijas: los rivales quedan alineados como una matriz */
+    .menu .botones {
+        flex: 1;
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+    .menu button { min-width: 0; height: 36px; padding: 0 4px; }
     .grilla { gap: 2px; }
     .celda { border-radius: 2px; letter-spacing: -0.03em; font-size: clamp(8px, 3.5cqi, 18px); }
+}
+
+/* Pantallas bajas (celular apaisado): la grilla fija taparía todo */
+@media (max-width: 600px) and (max-height: 560px) {
+    .tablero { position: static; }
 }
 
 @media (hover: none) {

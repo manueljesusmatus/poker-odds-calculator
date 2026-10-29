@@ -4,44 +4,27 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Evo30Visor</title>
+    <title>13×13</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Rajdhani:wght@500;600;700&display=swap">
-    <link rel="stylesheet" href="evo.css">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23080e14'/><rect x='5' y='5' width='10' height='10' rx='2' fill='%233ecf8e'/><rect x='17' y='5' width='10' height='10' rx='2' fill='%23e05555'/><rect x='5' y='17' width='10' height='10' rx='2' fill='%235ab0d4'/><rect x='17' y='17' width='10' height='10' rx='2' fill='%23f0a840'/></svg>">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23080e14'/><rect x='3' y='3' width='6' height='6' rx='1' fill='%233ecf8e'/><rect x='10' y='3' width='6' height='6' rx='1' fill='%233ecf8e'/><rect x='17' y='3' width='6' height='6' rx='1' fill='%23e05555'/><rect x='24' y='3' width='6' height='6' rx='1' fill='%231e3040'/><rect x='3' y='10' width='6' height='6' rx='1' fill='%233ecf8e'/><rect x='10' y='10' width='6' height='6' rx='1' fill='%233ecf8e'/><rect x='17' y='10' width='6' height='6' rx='1' fill='%235ab0d4'/><rect x='24' y='10' width='6' height='6' rx='1' fill='%231e3040'/><rect x='3' y='17' width='6' height='6' rx='1' fill='%23f0a840'/><rect x='10' y='17' width='6' height='6' rx='1' fill='%235ab0d4'/><rect x='17' y='17' width='6' height='6' rx='1' fill='%233ecf8e'/><rect x='24' y='17' width='6' height='6' rx='1' fill='%231e3040'/><rect x='3' y='24' width='6' height='6' rx='1' fill='%231e3040'/><rect x='10' y='24' width='6' height='6' rx='1' fill='%231e3040'/><rect x='17' y='24' width='6' height='6' rx='1' fill='%231e3040'/><rect x='24' y='24' width='6' height='6' rx='1' fill='%233ecf8e'/></svg>">
 </head>
 
 <body>
     <div class="app">
-        <header class="cabecera">
-            <div>
-                <h1 class="logo">Evo30<span>Visor</span></h1>
-                <p class="sub">6-MAX 100BB · NL2-NL25</p>
-            </div>
-            <button type="button" class="contraste" id="contraste" aria-pressed="false">◐ Contraste</button>
-        </header>
-
-        <nav class="barra">
-            <span class="etiqueta">Posición</span>
-            <div class="botones" id="posiciones"></div>
-            <span class="separador"></span>
-            <span class="etiqueta">Vista</span>
-            <div class="botones" id="vistas"></div>
-        </nav>
-
-        <nav class="barra" id="subbarra" hidden>
-            <span class="etiqueta" id="sub-etiqueta"></span>
-            <div class="botones" id="rivales"></div>
-        </nav>
+        <nav class="menu" id="menu" aria-label="Tablas"></nav>
 
         <main class="cuerpo">
             <section class="tablero">
                 <div class="tablero-cab">
                     <span class="etiqueta" id="titulo"></span>
                     <em class="nota" id="nota"></em>
+                    <button type="button" class="contraste" id="contraste" aria-pressed="false" title="Contraste" aria-label="Contraste">◐</button>
                 </div>
                 <div class="grilla" id="grilla"></div>
+                <p class="resumen" id="resumen"></p>
             </section>
 
             <aside class="lateral">
@@ -65,8 +48,8 @@
         </main>
     </div>
 
-    <script src="evo-ranges.js"></script>
-    <script src="evo.js"></script>
+    <script src="ranges.js"></script>
+    <script src="app.js"></script>
 </body>
 
 </html>
