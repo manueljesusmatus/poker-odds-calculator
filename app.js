@@ -17,7 +17,7 @@ const ACCIONES = {
     b: { clase: 'call', leyenda: 'Call', accion: 'Call', desc: 'Call siempre' },
     o: { clase: 'mixto', leyenda: 'Mixto (Call o Fold)', accion: 'Mixto', desc: 'Mixto: call o fold' },
     p: { clase: 'cuatro', leyenda: '4-bet', accion: '4-bet', desc: '4-bet siempre' },
-    x: { clase: 'abrias', leyenda: 'Fold (abrías)', accion: 'Fold', desc: 'Abrías, pero fold al 3-bet' },
+    x: { clase: 'abrias', leyenda: 'Fold (abrías)', accion: 'Fold', desc: 'Fold al 3-bet (abrías)' },
     '.': { clase: 'fold', leyenda: 'Fold', accion: 'Fold', desc: 'Fold siempre' },
 };
 

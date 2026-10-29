@@ -46,13 +46,17 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
+/* Escritorio ancho: menú en columna a la izquierda, grilla al centro, tarjetas a la derecha */
 .app {
-    max-width: 900px;
+    max-width: 1240px;
     margin: 0 auto;
     padding: 24px 24px 32px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+    display: grid;
+    grid-template-columns: 340px minmax(0, 1fr);
+    gap: 16px;
+    /* Los paneles se estiran para terminar a la altura de la última fila de la grilla */
+    align-items: stretch;
+    --cab: 38px; /* alto del encabezado de la grilla (26px + 12px de margen) */
 }
 
 /* Botones */
@@ -83,11 +87,23 @@ button:hover { color: var(--texto); border-color: #2a4256; }
 }
 .contraste.activo { color: var(--oro); border-color: var(--oro-borde); }
 
-/* Menú: todas las tablas a la vista. Columnas: apertura | vs RFI | vs 3-bet */
+/* Menú: todas las tablas a la vista, un bloque debajo del otro */
 .menu {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
+    display: flex;
+    flex-direction: column;
     gap: 12px;
+    margin-top: var(--cab); /* empieza a la altura de la primera fila de la grilla */
+}
+
+/* El alto sobrante se reparte entre las filas de VS RFI / VS 3-BET */
+.grupo:not([data-tono="verde"]) { flex: 1; }
+.menu .fila { flex: 1; }
+
+/* 5 columnas fijas: los rivales quedan alineados como una matriz */
+.menu .botones {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
 .grupo {
@@ -121,8 +137,6 @@ button:hover { color: var(--texto); border-color: #2a4256; }
     gap: 5px;
 }
 
-.apertura { flex-direction: column; }
-
 .fila {
     display: flex;
     align-items: center;
@@ -141,8 +155,8 @@ button:hover { color: var(--texto); border-color: #2a4256; }
 
 .menu button {
     height: 28px;
-    min-width: 48px;
-    padding: 0 8px;
+    min-width: 0;
+    padding: 0 4px;
     letter-spacing: 0.12em;
 }
 
@@ -167,16 +181,21 @@ button:hover { color: var(--texto); border-color: #2a4256; }
     display: grid;
     grid-template-columns: minmax(0, 1fr) 220px;
     gap: 14px;
-    align-items: start;
 }
 
+.tablero { align-self: start; }
+
+/* Alto fijo (--cab) para que los paneles laterales arranquen alineados con la grilla */
 .tablero-cab {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
     gap: 4px 12px;
-    margin: 6px 0 10px;
+    height: 26px;
+    margin: 0 0 12px;
+    white-space: nowrap;
 }
+
+.tablero-cab .nota { overflow: hidden; text-overflow: ellipsis; }
 
 /* Título a la izquierda; nota y botón de contraste a la derecha */
 .tablero-cab .etiqueta { margin-right: auto; }
@@ -229,11 +248,14 @@ button:hover { color: var(--texto); border-color: #2a4256; }
 .lateral {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
+    margin-top: var(--cab);
 }
 
+.lateral .tarjeta:last-child { flex: 1; }
+
 .tarjeta {
-    padding: 16px 14px;
+    padding: 13px 14px;
     background: var(--panel);
     border: 1px solid var(--borde);
     border-radius: 8px;
@@ -295,6 +317,9 @@ button:hover { color: var(--texto); border-color: #2a4256; }
 
 #info p { margin: 0; }
 
+/* Reserva el alto de la info completa: el hover no cambia el tamaño de la tarjeta ni mueve los paneles */
+#info { min-height: 118px; }
+
 .info-raya,
 .info-mano {
     font-family: var(--mono);
@@ -309,7 +334,11 @@ button:hover { color: var(--texto); border-color: #2a4256; }
     font-family: var(--mono);
     font-size: 12.5px;
     color: var(--etiqueta);
-    line-height: 1.9;
+    line-height: 1.75;
+    /* Una línea por dato: si algo no entra se corta, nunca agranda la tarjeta */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .info-hint { margin-top: 6px !important; }
@@ -320,21 +349,44 @@ button:hover { color: var(--texto); border-color: #2a4256; }
     font-size: 14px;
     font-weight: 500;
     color: var(--t);
-    line-height: 1.7;
+    line-height: 1.6;
 }
 
 .info-accion.a-fold { color: var(--etiqueta); }
+
+/* Pantallas medianas: la grilla quedaría más baja que el menú, así que el menú vuelve arriba (apertura | vs RFI | vs 3-bet) */
+@media (max-width: 1240px) {
+    .menu { margin-top: 0; }
+    .grupo:not([data-tono="verde"]),
+    .menu .fila { flex: none; }
+
+    .app {
+        max-width: 900px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .menu {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    /* Apertura en una columna, alineada con las 5 filas de los otros bloques */
+    .menu .apertura { grid-template-columns: minmax(0, 1fr); }
+}
 
 /* Tablet y celular */
 @media (max-width: 760px) {
     .app { padding: 16px 16px 24px; gap: 10px; }
 
     .menu { grid-template-columns: minmax(0, 1fr); }
-    .apertura { flex-direction: row; }
+    .menu .apertura { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 
     .cuerpo { grid-template-columns: minmax(0, 1fr); }
 
     .lateral {
+        margin-top: 0;
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
     }
@@ -352,6 +404,7 @@ button:hover { color: var(--texto); border-color: #2a4256; }
     .lateral { order: 3; }
 
     .tablero {
+        align-self: stretch; /* ancho completo: acá es hijo directo de .app (flex en columna) */
         position: sticky;
         top: 0;
         z-index: 5;
@@ -379,13 +432,7 @@ button:hover { color: var(--texto); border-color: #2a4256; }
     .resumen .info-accion { font-size: 12px; }
 
     .grupo { padding: 12px; }
-    /* 5 columnas fijas: los rivales quedan alineados como una matriz */
-    .menu .botones {
-        flex: 1;
-        display: grid;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-    }
-    .menu button { min-width: 0; height: 36px; padding: 0 4px; }
+    .menu button { height: 36px; }
     .grilla { gap: 2px; }
     .celda { border-radius: 2px; letter-spacing: -0.03em; font-size: clamp(8px, 3.5cqi, 18px); }
 }
