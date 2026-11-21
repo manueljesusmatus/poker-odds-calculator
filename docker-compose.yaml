@@ -1,0 +1,17 @@
+services:
+  poker:
+    build: .
+    restart: unless-stopped
+    networks:
+      - proxy
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.poker.rule=Host(`poker.${DOMAIN:?falta DOMAIN}`)
+      - traefik.http.routers.poker.entrypoints=websecure
+      - traefik.http.services.poker.loadbalancer.server.port=80
+
+networks:
+  proxy:
+    external: true
