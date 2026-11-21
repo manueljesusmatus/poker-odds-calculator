@@ -16,3 +16,8 @@ The app is **13×13** (tab title; there is no on-page header, to save space, and
 - Stats: "combos jugados" counts every letter except `.` and `x`; the percentage is over 1326 combos, except vs 3-bet, which is over the opening range (all non-`.` cells).
 - The data was extracted from the PDFs by sampling cell colors; every chart's total matches the "COMBOS JUGADOS" shown in its screenshot, and each vs-3-bet chart's non-fold cells match that position's RFI chart.
 
+## Deploy
+
+- `Dockerfile` is `nginx:alpine` plus the 4 site files; `.dockerignore` whitelists only those, so `resource/`, `.git` and docs stay out of the image. A new site file must be added to both.
+- `docker-compose.yaml` runs behind Traefik: no published ports, external network `proxy`, router `poker` (must be unique on the VPS), `Host(poker.${DOMAIN})` on the `websecure` entrypoint, container port 80. `DOMAIN` comes from the Stack's Environment in Komodo, never from the repo.
+- Deployed as a Komodo Stack from this repo (`master`, file path `docker-compose.yaml`). A GitHub push webhook (content type `application/json`; the form-encoded default fails with "Failed to parse github request body") redeploys with Webhook Force Deploy on, because without it Komodo only redeploys when the compose file changes, not the site files.
